@@ -1,21 +1,39 @@
 package com.codeup.codeupspringblog.controllers;
 
+import com.codeup.codeupspringblog.models.Post;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class PostController {
 
     @GetMapping("/posts")
-    @ResponseBody
-    public String index() {
-        return "This is the posts index page";
+    public String index(Model model) {
+        // create an ArrayList of two post objects
+        List<Post> posts = new ArrayList<>();
+        posts.add(new Post("First post title", "This is the first post"));
+        posts.add(new Post("Second post title", "This is the second post"));
+
+        // add the posts to the model
+        model.addAttribute("posts", posts);
+        return "posts/index";
     }
 
     @GetMapping("/posts/{id}")
-    @ResponseBody
-    public String view(@PathVariable int id) {
-        return "This is post " + id;
+    public String view(@PathVariable int id, Model model) {
+        // create a new post object
+        Post post = new Post(1, "Post title", "This is post ");
+
+        // add the post to the model
+        model.addAttribute("post", post);
+
+        // return the view
+        return "posts/show";
+//        return "This is post " + id;
     }
 
     @GetMapping("/posts/create")
