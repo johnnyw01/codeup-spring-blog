@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<html lang="en">
+<head th:replace="partials/head :: head">
+    <meta charset="UTF-8">
+    <title>Edit Blog Post</title>
+</head>
+<body>
+<nav th:replace="partials/navbar :: navbar"></nav>
+
+<div class="container d-flex justify-content-center">
+  <div class="card p-4">
+    <h1 class="text-center mb-4">Edit Post</h1>
+    <form th:action="@{/posts/{id}/edit(id=${editPost.id})}" th:method="POST" th:object="${editPost}">
+      <div class="form-group">
+        <input class="form-control" th:field="*{title}">
+      </div>
+      <div class="form-group">
+        <textarea class="form-control" th:field="*{body}"></textarea>
+      </div>
+      <div class="d-grid gap-2 mt-3">
+        <button type="submit" class="btn btn-primary mt-2">Update Post</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

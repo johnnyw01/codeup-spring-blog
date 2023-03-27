@@ -42,9 +42,10 @@ public class PostController {
     @GetMapping("/posts/{id}")
     public String view(@PathVariable String id, Model model) {
         // create a new post object
-        // convert the id parameter to a long value
+//         convert the id parameter to a long value
         long postId = Long.parseLong(id);
 //        Post post = new Post(postId, "Post title", "This is post ");
+
         Post post = postDao.getPostById(postId);
         // add the post to the model
         model.addAttribute("post", post);
@@ -54,27 +55,48 @@ public class PostController {
     }
 
     @GetMapping("/posts/create")
-    public String createBlogForm() {
-        System.out.println("This is working");
+    public String createBlogForm(Model model) {
+        model.addAttribute("post", new Post());
         return "posts/create";
     }
 
     @PostMapping("/posts/create")
-    public String createBlog(@RequestParam(name = "title") String title, @RequestParam(name = "body") String body) {
+    public String createBlog(@RequestParam(name = "title") String title, @RequestParam(name = "body") String body, @ModelAttribute Post newPost) {
         // validate the title and body parameters
         if (title == null || title.isEmpty() || body == null || body.isEmpty()) {
             return "redirect:/posts/create";
         }
-        System.out.println("This is working");
 
-            User user = userDao.findUserByUsername("test_user");
-            Post post = new Post();
+            System.out.println("This is working");
 
-            post.setTitle(title);
-            post.setBody(body);
-            post.setUser(user);
-            postDao.save(post);
+            User user = userDao.getById(1l);
+
+            newPost.setTitle(title);
+            newPost.setBody(body);
+            newPost.setUser(user);
+
+            postDao.save(newPost);
             return "redirect:/posts";
+        }
+
+
+        @GetMapping("/posts/{id}/edit")
+        public String editBlogForm ( @PathVariable long id, Model model){
+            Post editPost = postDao.getPostById(id);
+//            model.addAttribute("id", id);
+            model.addAttribute("editPost", editPost);
+            return "posts/edit";
+        }
+
+        @PostMapping("/posts/{id}/edit")
+        public String editPost ( @PathVariable long id, @RequestParam(name = "title") String editTitle, @RequestParam(name = "body") String editBody) {
+            Post post = postDao.getPostById(id);
+            post.setTitle(editTitle);
+            post.setBody(editBody);
+            postDao.save(post);
+
+            return "redirect:/posts";
+        }
+
 
     }
-}
