@@ -45,18 +45,18 @@ public class SecurityConfiguration  {
             http
                     /* Login configuration */
                     .formLogin()
-                    .loginPage("/users/login")
+                    .loginPage("/home")
                     .defaultSuccessUrl("/posts") // user's home page, it can be any URL
                     .permitAll() // Anyone can go to the login page
                     /* Logout configuration */
                     .and()
                     .logout()
-                    .logoutSuccessUrl("/") // append a query string value
+                    .logoutSuccessUrl("/home") // append a query string value
                     /* Pages that can be viewed without having to log in */
                     .permitAll()// allow all users to access the logout page
                     .and()
                     .authorizeHttpRequests()
-                    .requestMatchers("/", "/posts", "/users/signup", "/logout") // anyone can see the home and the ads pages
+                    .requestMatchers("/home", "/posts", "/users/signup", "/logout") // anyone can see the home and the ads pages
                     .permitAll()
                     /* Pages that require authentication */
                     .and()
