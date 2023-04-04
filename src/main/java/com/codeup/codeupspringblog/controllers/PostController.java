@@ -5,6 +5,8 @@ import com.codeup.codeupspringblog.models.User;
 import com.codeup.codeupspringblog.repositories.PostRepository;
 import com.codeup.codeupspringblog.repositories.UserRepository;
 import com.codeup.codeupspringblog.services.EmailService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -70,21 +72,22 @@ public class PostController {
             return "redirect:/posts/create";
         }
 
-            System.out.println("This is working");
+        User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            User user = userDao.getById(1l);
-
-            newPost.setTitle(title);
-            newPost.setBody(body);
-            newPost.setUser(user);
-
-            Post post = postDao.save(newPost);
-
-            emailService.prepareAndSend(post, newPost.getTitle(), newPost.getBody());
-            return "redirect:/posts";
+        if(authenticatedUser == null){
+            return "redirect:/users/login";
         }
 
+        newPost.setTitle(title);
+        newPost.setBody(body);
+        newPost.setUser(authenticatedUser);
 
+        Post post = postDao.save(newPost);
+
+        emailService.prepareAndSend(post, newPost.getTitle(), newPost.getBody());
+        return "redirect:/posts";
+
+    }
         @GetMapping("/posts/{id}/edit")
         public String editBlogForm ( @PathVariable long id, Model model){
             Post editPost = postDao.getPostById(id);
@@ -104,4 +107,11 @@ public class PostController {
         }
 
 
+    @PostMapping("/posts/{id}/delete")
+    public String deletePost(@PathVariable long id) {
+        postDao.delete(postDao.getById(id));
+
+        return "redirect:/posts";
     }
+
+}

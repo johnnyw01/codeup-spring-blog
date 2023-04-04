@@ -8,10 +8,10 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(length = 255, nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String title;
     @Lob
-    @Column(name = "body", nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String body;
     //For a column that is meant to store a large text area where a user can type an unlimited amount of characters, you would typically use the @Lob annotation (which stands for "Large Object").
     @ManyToOne
